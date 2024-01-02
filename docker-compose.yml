@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - aws
+    environment:
+      - POSTGRES_DB=aws
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - 5432:5432
+volumes:
+  db-data:
+secrets:
+  db-password:
+    file: db/password.txt
+networks:
+  aws:

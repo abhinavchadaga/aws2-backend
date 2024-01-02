@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aws
+    username: postgres
+    password: abhinav-web-services-rocks
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: on

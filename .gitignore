@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# don't include db password
+db/
