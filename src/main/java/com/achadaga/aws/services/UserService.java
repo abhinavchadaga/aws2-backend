@@ -1,9 +1,13 @@
 package com.achadaga.aws.services;
 
 import com.achadaga.aws.domain.User;
+import com.achadaga.aws.exceptions.InvalidUsernameException;
+import com.achadaga.aws.exceptions.UserAlreadyExistsException;
 import com.achadaga.aws.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -24,13 +28,23 @@ public class UserService {
         return username != null && username.matches(regex);
     }
 
-    public User createNewUser(String username) throws InvalidUsernameException {
+    public void createNewUser(String username) throws InvalidUsernameException {
         if (!isValidUsername(username)) {
             throw new InvalidUsernameException(username);
         }
+
+        if (userRepository.existsById(username)) {
+            throw new UserAlreadyExistsException(username);
+        }
+
         User user = User.builder()
                 .username(username)
                 .build();
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public User getUser(String username) {
+        Optional<User> user = userRepository.findById(username);
+        return user.orElse(null);
     }
 }

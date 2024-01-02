@@ -1,4 +1,4 @@
-package com.achadaga.aws.services;
+package com.achadaga.aws.exceptions;
 
 public class InvalidUsernameException extends RuntimeException {
     public InvalidUsernameException(String username) {
