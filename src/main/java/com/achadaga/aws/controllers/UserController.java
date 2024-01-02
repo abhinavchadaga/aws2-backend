@@ -1,13 +1,16 @@
 package com.achadaga.aws.controllers;
 
+import com.achadaga.aws.services.InvalidUsernameException;
 import com.achadaga.aws.services.UserService;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
-@Log
 public class UserController {
     private final UserService userService;
 
@@ -17,9 +20,13 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createNewUser(@RequestParam String username) {
-        log.info("Creating new user with name: " + username);
-        userService.createNewUser(username);
-        return "User created";
+    public ResponseEntity<String> createNewUser(@RequestParam String username) {
+        try {
+            userService.createNewUser(username);
+            return ResponseEntity.ok("User " + username + " created successfully");
+        } catch (InvalidUsernameException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 }

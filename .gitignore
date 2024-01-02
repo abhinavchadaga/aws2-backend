@@ -33,4 +33,4 @@ build/
 .vscode/
 
 # don't include db password
-db/
+db/**/*

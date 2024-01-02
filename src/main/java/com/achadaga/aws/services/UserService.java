@@ -14,7 +14,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createNewUser(String username) {
+    /**
+     * @param username to check
+     * @return true if username is non-empty, contains only alphanumeric characters, and is less
+     * than 255 characters
+     */
+    private boolean isValidUsername(String username) {
+        String regex = "^[a-zA-Z0-9]{1,254}$";
+        return username != null && username.matches(regex);
+    }
+
+    public User createNewUser(String username) throws InvalidUsernameException {
+        if (!isValidUsername(username)) {
+            throw new InvalidUsernameException(username);
+        }
         User user = User.builder()
                 .username(username)
                 .build();
