@@ -28,7 +28,7 @@ public class UserService {
         return username != null && username.matches(regex);
     }
 
-    public void createNewUser(String username) throws InvalidUsernameException {
+    public User createNewUser(String username) throws InvalidUsernameException {
         if (!isValidUsername(username)) {
             throw new InvalidUsernameException(username);
         }
@@ -40,7 +40,7 @@ public class UserService {
         User user = User.builder()
                 .username(username)
                 .build();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public User getUser(String username) {

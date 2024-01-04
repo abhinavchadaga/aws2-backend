@@ -2,6 +2,7 @@ package com.achadaga.aws.controllers;
 
 import com.achadaga.aws.domain.User;
 import com.achadaga.aws.dto.CreateUserRequest;
+import com.achadaga.aws.dto.CreateUserResponse;
 import com.achadaga.aws.exceptions.InvalidUsernameException;
 import com.achadaga.aws.services.UserService;
 import jakarta.validation.Valid;
@@ -22,14 +23,22 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createNewUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<CreateUserResponse> createNewUser(@Valid @RequestBody CreateUserRequest request) {
         try {
             String username = request.getUsername();
-            userService.createNewUser(username);
-            return ResponseEntity.ok("User " + username + " created successfully");
+            User newUser = userService.createNewUser(username);
+            CreateUserResponse response = CreateUserResponse.builder()
+                    .user(newUser)
+                    .msg("Successfully created user " + newUser.getUsername())
+                    .build();
+            return ResponseEntity.ok(response);
         } catch (InvalidUsernameException e) {
+            CreateUserResponse errorResponse = CreateUserResponse.builder()
+                    .user(null)
+                    .msg("Failed to create user")
+                    .build();
             return ResponseEntity.badRequest()
-                    .body(e.getMessage());
+                    .body(errorResponse);
         }
     }
 
